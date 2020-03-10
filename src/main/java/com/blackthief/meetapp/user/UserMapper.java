@@ -1,5 +1,7 @@
 package com.blackthief.meetapp.user;
 
+import com.blackthief.meetapp.security.AuthorizationRequest;
+
 public class UserMapper {
 
 	private UserMapper() {
