@@ -4,13 +4,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	User findByName(String name);
+	Optional<User> findByName(String name);
 
-	User findById(long id);
+	Optional<User> findById(long id);
 
 	List<User> findAll();
 }
