@@ -1,6 +1,5 @@
 package com.blackthief.meetapp.meeting;
 
-
 import java.net.URI;
 import java.util.stream.Collectors;
 

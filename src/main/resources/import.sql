@@ -9,7 +9,7 @@ INSERT INTO user_roles (user_id, role_id) VALUES (1, 1);
 INSERT INTO user_roles (user_id, role_id) VALUES (1, 2);
 INSERT INTO user_roles (user_id, role_id) VALUES (3, 2);
 
-INSERT INTO meeting (id, description, date, max_attendees, needed_beers, weather_temp) VALUES (1, 'user1 birthday', {ts '2020-03-20'}, 10, 2, null);
+INSERT INTO meeting (id, description, date, max_attendees) VALUES (1, 'user1 birthday', {ts '2020-03-20'}, 10);
 
 INSERT INTO meeting_users (meeting_id, user_id) VALUES (1, 2);
 INSERT INTO meeting_users (meeting_id, user_id) VALUES (1, 3);

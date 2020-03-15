@@ -12,6 +12,8 @@ import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Builder
 @Data
 @AllArgsConstructor
@@ -26,6 +28,7 @@ public class MeetingRequest implements Serializable {
 	
 	@NotNull
 	@Future(message = "Date should be gretear than today")
+	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
 	private LocalDateTime date;
 	
 	@NotNull

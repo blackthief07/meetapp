@@ -9,7 +9,6 @@ public class MeetingMapper {
 		return MeetingResponse.builder()
 				.description(meeting.getDescription())
 				.date(meeting.getDate())
-				.weatherTemp(meeting.getWeatherTemp())
 				.maxAttendees(meeting.getMaxAttendees())
 				.id(meeting.getId())
 				.build();
