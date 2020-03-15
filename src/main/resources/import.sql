@@ -4,9 +4,12 @@ INSERT INTO user (id, name, password) VALUES (3, 'user3', '$2a$04$bmmWXec6YkFIes
 
 INSERT INTO role (id, description, name) VALUES (1, 'Admin role', 'ADMIN');
 INSERT INTO role (id, description, name) VALUES (2, 'User role', 'USER');
-INSERT INTO role (id, description, name) VALUES (3, 'Operational role', 'OPERATIONAL');
 
 INSERT INTO user_roles (user_id, role_id) VALUES (1, 1);
 INSERT INTO user_roles (user_id, role_id) VALUES (1, 2);
-INSERT INTO user_roles (user_id, role_id) VALUES (2, 3);
 INSERT INTO user_roles (user_id, role_id) VALUES (3, 2);
+
+INSERT INTO meeting (id, description, date, max_attendees, needed_beers, weather_temp) VALUES (1, 'user1 birthday', {ts '2020-03-20'}, 10, 2, null);
+
+INSERT INTO meeting_users (meeting_id, user_id) VALUES (1, 2);
+INSERT INTO meeting_users (meeting_id, user_id) VALUES (1, 3);

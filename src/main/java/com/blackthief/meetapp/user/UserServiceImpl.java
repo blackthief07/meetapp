@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service("userDetailsService")
@@ -25,17 +27,25 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-		final User retrievedUser = userRepository.findByName(userName);
-		if (retrievedUser == null) {
-			throw new UsernameNotFoundException("Invalid username or password");
-		}
+		final User retrievedUser = userRepository.findByName(userName)
+				.orElseThrow(() -> new UsernameNotFoundException("Invalid username or password"));
 
 		return UserDetailsMapper.build(retrievedUser);
 	}
+	
+	@Override
+	public List<User> getAll() {
+		return userRepository.findAll();
+	}
 
 	@Override
-	public User getUser(long id) {
+	public Optional<User> getById(long id) {
 		return userRepository.findById(id);
+	}
+	
+	@Override
+	public Optional<User> getByUsername(String userName) {
+		return userRepository.findByName(userName);
 	}
 
 	@Override
