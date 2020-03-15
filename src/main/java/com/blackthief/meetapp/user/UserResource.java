@@ -3,8 +3,6 @@ package com.blackthief.meetapp.user;
 import lombok.Getter;
 import org.springframework.hateoas.ResourceSupport;
 
-import com.blackthief.meetapp.meeting.MeetingController;
-
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 

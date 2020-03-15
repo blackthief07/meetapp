@@ -10,7 +10,6 @@ import javax.persistence.*;
 import com.blackthief.meetapp.meeting.Meeting;
 import com.blackthief.meetapp.role.Role;
 
-import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 

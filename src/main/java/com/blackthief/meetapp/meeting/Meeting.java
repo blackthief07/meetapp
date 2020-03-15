@@ -9,7 +9,9 @@ import javax.persistence.*;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.blackthief.meetapp.beer.Beer;
 import com.blackthief.meetapp.user.User;
+import com.blackthief.meetapp.weather.Weather;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -35,12 +37,6 @@ public class Meeting {
 	
 	@Column(name = "max_attendees")
 	private Integer maxAttendees;
-	
-	@Column(name = "needed_beers", nullable = true)
-	private Integer neededBeers;
-	
-	@Column(name = "weather_temp", nullable = true)
-	private Integer weatherTemp;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "MEETING_USERS",
@@ -50,6 +46,12 @@ public class Meeting {
 			@JoinColumn(name = "USER_ID") })
 	private Set<User> attendees;
 	
+	@OneToOne(mappedBy = "meeting")
+	private Weather weather;
+	
+	@OneToOne(mappedBy = "meeting")
+	private Beer beer;
+	
 	public void addAttendee(User attendee) {
 		this.attendees.add(attendee);
 	}
@@ -57,7 +59,7 @@ public class Meeting {
 	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof User)) return false;
+        if (!(o instanceof Meeting)) return false;
         Meeting meeting = (Meeting) o;
         return Objects.equals(getId(), meeting.getId());
     }

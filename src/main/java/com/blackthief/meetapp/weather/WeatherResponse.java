@@ -1,18 +1,19 @@
-package com.blackthief.meetapp.meeting;
+package com.blackthief.meetapp.weather;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 @Data
 @Builder
 @AllArgsConstructor
-public class MeetingResponse implements Serializable {
+public class WeatherResponse implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -20,12 +21,9 @@ public class MeetingResponse implements Serializable {
 
 	private String description;
 	
-	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private LocalDateTime date;
 	
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private Integer maxAttendees;
-	
-	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private Integer neededBeers;
+	private Double temp;
 }
