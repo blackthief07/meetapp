@@ -16,6 +16,8 @@
         <lombok.version>1.18.4</lombok.version>
         <jwt.version>0.9.1</jwt.version>
         <h2.version>1.4.194</h2.version>
+        <unirest.version>3.6.01</unirest.version>
+        <springfox.version>2.9.2</springfox.version>
     </properties>
 
     <dependencies>
@@ -44,8 +46,23 @@
 				<dependency>
 				    <groupId>com.konghq</groupId>
 				    <artifactId>unirest-java</artifactId>
-				    <version>3.6.01</version>
+				    <version>${unirest.version}</version>
 				    <scope>provided</scope>
+				</dependency>
+				<dependency>
+				    <groupId>io.springfox</groupId>
+				    <artifactId>springfox-swagger2</artifactId>
+				    <version>${springfox.version}</version>
+				</dependency>
+				<dependency>
+				    <groupId>io.springfox</groupId>
+				    <artifactId>springfox-swagger-ui</artifactId>
+				    <version>${springfox.version}</version>
+				</dependency>
+				<dependency>
+				    <groupId>io.springfox</groupId>
+				    <artifactId>springfox-bean-validators</artifactId>
+				    <version>${springfox.version}</version>
 				</dependency>
         <!-- Test -->
         <dependency>
