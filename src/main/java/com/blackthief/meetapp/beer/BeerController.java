@@ -9,9 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.blackthief.meetapp.meeting.Meeting;
-import com.blackthief.meetapp.meeting.MeetingNotFoundException;
-import com.blackthief.meetapp.meeting.MeetingService;
+import com.blackthief.meetapp.meetup.MeetUp;
+import com.blackthief.meetapp.meetup.MeetUpNotFoundException;
+import com.blackthief.meetapp.meetup.MeetUpService;
 import com.blackthief.meetapp.weather.Weather;
 import com.blackthief.meetapp.weather.WeatherNotFoundException;
 import com.blackthief.meetapp.weather.WeatherService;
@@ -21,51 +21,51 @@ import com.blackthief.meetapp.weather.WeatherService;
 public class BeerController {
 
 	final BeerService beerService;
-	final MeetingService meetingService;
+	final MeetUpService meetUpService;
 	final WeatherService weatherService;
 
-	public BeerController(final BeerService beerService, final MeetingService meetingService, final WeatherService weatherService) {
+	public BeerController(final BeerService beerService, final MeetUpService meetUpService, final WeatherService weatherService) {
 		this.beerService = beerService;
-		this.meetingService = meetingService;
+		this.meetUpService = meetUpService;
 		this.weatherService = weatherService;
 	}
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@GetMapping(value = { "/meetings/{id}/beers" }, produces = { "application/hal+json" })
+	@GetMapping(value = { "/meetups/{id}/beers" }, produces = { "application/hal+json" })
 	public ResponseEntity<BeerResource> getById(@Min(1) @PathVariable final long id) {
 		
-		final Meeting meeting = meetingService
+		final MeetUp meetUp = meetUpService
 	        .getById(id)
-	        .orElseThrow(() -> new MeetingNotFoundException(id));
+	        .orElseThrow(() -> new MeetUpNotFoundException(id));
 		
-		final Weather weather = (meeting.getWeather() == null) ? this.GetWeatherFromApi(meeting) : meeting.getWeather();
-		meeting.setWeather(weather);
+		final Weather weather = (meetUp.getWeather() == null) ? this.GetWeatherFromApi(meetUp) : meetUp.getWeather();
+		meetUp.setWeather(weather);
 		
-		final Beer beer = this.GetBeer(meeting);
+		final Beer beer = this.GetBeer(meetUp);
         
 		return ResponseEntity.ok(new BeerResource(beer));
 	}
 	
-	private Beer GetBeer(Meeting meeting) {
-		final Beer beer = beerService.getByMeeting(meeting)
-				.orElseThrow(() -> new BeerNotFoundException(meeting.getId()));
+	private Beer GetBeer(MeetUp meetUp) {
+		final Beer beer = beerService.getByMeetUp(meetUp)
+				.orElseThrow(() -> new BeerNotFoundException(meetUp.getId()));
 		
-		if(meeting.getBeer() == null) {
+		if(meetUp.getBeer() == null) {
 			return beerService.save(beer);
 		}
 		
-		meeting.getBeer().setCantBeers(beer.getCantBeers());
-		meeting.getBeer().setBeersPerPackage(beer.getBeersPerPackage());
-		meeting.getBeer().setPacksToBuy(beer.getPacksToBuy());
+		meetUp.getBeer().setCantBeers(beer.getCantBeers());
+		meetUp.getBeer().setBeersPerPackage(beer.getBeersPerPackage());
+		meetUp.getBeer().setPacksToBuy(beer.getPacksToBuy());
 
-		return beerService.update(meeting.getBeer());
+		return beerService.update(meetUp.getBeer());
 	}
 	
-	private Weather GetWeatherFromApi(Meeting meeting) {
-		final LocalDateTime date = meeting.getDate();
+	private Weather GetWeatherFromApi(MeetUp meetUp) {
+		final LocalDateTime date = meetUp.getDate();
 		
 		return weatherService
-		        .getByMeeting(meeting)
+		        .getByMeetUp(meetUp)
 		        .orElseThrow(() -> new WeatherNotFoundException(date));
 	}
 }

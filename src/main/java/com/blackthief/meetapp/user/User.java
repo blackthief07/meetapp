@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import com.blackthief.meetapp.meeting.Meeting;
+import com.blackthief.meetapp.checkin.CheckIn;
 import com.blackthief.meetapp.role.Role;
 
 import java.util.Objects;
@@ -37,8 +37,8 @@ public class User {
 			@JoinColumn(name = "ROLE_ID") })
 	private Set<Role> roles;
 	
-	@ManyToMany(mappedBy = "attendees")
-	private Set<Meeting> meetings;
+	@OneToMany(mappedBy = "attendee", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<CheckIn> meetUpCheckIn;
 	
 	@Override
     public boolean equals(Object o) {

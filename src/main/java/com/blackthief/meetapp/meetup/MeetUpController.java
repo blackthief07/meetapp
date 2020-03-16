@@ -1,4 +1,4 @@
-package com.blackthief.meetapp.meeting;
+package com.blackthief.meetapp.meetup;
 
 import java.net.URI;
 import java.util.stream.Collectors;
@@ -21,24 +21,24 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resources;
 
 @RestController
-@RequestMapping(value = "/meetings", produces = "application/hal+json")
+@RequestMapping(value = "/meetups", produces = "application/hal+json")
 @CrossOrigin
-public class MeetingController {
+public class MeetUpController {
 
-	final MeetingService meetingService;
+	final MeetUpService meetUpService;
 	final UserService userService;
 
-	public MeetingController(final MeetingService meetingService, final UserService userSevice) {
-		this.meetingService = meetingService;
+	public MeetUpController(final MeetUpService meetUpService, final UserService userSevice) {
+		this.meetUpService = meetUpService;
 		this.userService = userSevice;
 	}
 
 	@PreAuthorize("hasRole('ROLE_USER') OR hasRole('ROLE_ADMIN')")
 	@GetMapping("/")
-	public ResponseEntity<Resources<MeetingResource>> getAll() {
-		final Resources<MeetingResource> resources = new Resources<>(meetingService.getAll()
+	public ResponseEntity<Resources<MeetUpResource>> getAll() {
+		final Resources<MeetUpResource> resources = new Resources<>(meetUpService.getAll()
 				.stream()
-				.map(MeetingResource::new)
+				.map(MeetUpResource::new)
 				.collect(Collectors.toList()));
 		
 	    final String uriString = ServletUriComponentsBuilder.fromCurrentRequest().build().toUriString();
@@ -48,35 +48,35 @@ public class MeetingController {
 	
 	@PreAuthorize("hasRole('ROLE_USER') OR hasRole('ROLE_ADMIN')")
 	@GetMapping("/{id}")
-	public ResponseEntity<MeetingResource> getById(@Min(1) @PathVariable long id) {
-		return meetingService
+	public ResponseEntity<MeetUpResource> getById(@Min(1) @PathVariable long id) {
+		return meetUpService
 		        .getById(id)
-		        .map(meeting -> ResponseEntity.ok(new MeetingResource(meeting)))
-		        .orElseThrow(() -> new MeetingNotFoundException(id));
+		        .map(meeting -> ResponseEntity.ok(new MeetUpResource(meeting)))
+		        .orElseThrow(() -> new MeetUpNotFoundException(id));
 	}
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping
-	public ResponseEntity<MeetingResource> save(@RequestBody final MeetingRequest meetingRequest) {
-		final Meeting meetingToSave = meetingService.save(MeetingMapper.toDomain(meetingRequest));
+	public ResponseEntity<MeetUpResource> save(@RequestBody final MeetUpRequest meetUpRequest) {
+		final MeetUp meetUpToSave = meetUpService.save(MeetUpMapper.toDomain(meetUpRequest));
 		
 		final URI uri = MvcUriComponentsBuilder.fromController(getClass())
 		            .path("/{id}")
-		            .buildAndExpand(meetingToSave.getId())
+		            .buildAndExpand(meetUpToSave.getId())
 		            .toUri();
 		
-	    return ResponseEntity.created(uri).body(new MeetingResource(meetingToSave));
+	    return ResponseEntity.created(uri).body(new MeetUpResource(meetUpToSave));
 	}
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/{id}/attendees")
 	public ResponseEntity<Resources<UserResource>> getAttendees(@Min(1) @PathVariable long id) {
-		final Resources<UserResource> resources = new Resources<>(meetingService
+		final Resources<UserResource> resources = new Resources<>(meetUpService
 	        .getById(id)
-	        .orElseThrow(() -> new MeetingNotFoundException(id))
-	        .getAttendees()
+	        .orElseThrow(() -> new MeetUpNotFoundException(id))
+	        .getMeetUpCheckIns()
 	        .stream()
-	        .map(UserResource::new)
+	        .map(checkIns -> new UserResource(checkIns.getAttendee()))
 	        .collect(Collectors.toList()));
 	        
         final String uriString = ServletUriComponentsBuilder.fromCurrentRequest().build().toUriString();
@@ -85,24 +85,24 @@ public class MeetingController {
 	}
 	
 	@PreAuthorize("hasRole('ROLE_USER') OR hasRole('ROLE_ADMIN')")
-	@PatchMapping("/{id}/attendees/me")
-	public ResponseEntity<MeetingResource> addAttendee(@Min(1) @PathVariable final long id) {
+	@PutMapping("/{id}/attendees/me")
+	public ResponseEntity<MeetUpResource> addAttendee(@Min(1) @PathVariable final long id) {
 		final User userAuthenticated = userService.getByUsername(((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())
 				.orElseThrow(() -> new UsernameNotFoundException("Incorrect username"));
 		
-		Meeting meetingToSave = meetingService
+		MeetUp meetUpToSave = meetUpService
 		        .getById(id)
-		        .orElseThrow(() -> new MeetingNotFoundException(id));
+		        .orElseThrow(() -> new MeetUpNotFoundException(id));
 		
-		meetingToSave.addAttendee(userAuthenticated);
+		meetUpToSave.addAttendee(userAuthenticated);
 		
-		final Meeting meetingSaved = meetingService.update(meetingToSave);
+		final MeetUp meetingSaved = meetUpService.update(meetUpToSave);
 		
 		final URI uri = MvcUriComponentsBuilder.fromController(getClass())
 		            .path("/{id}")
 		            .buildAndExpand(meetingSaved.getId())
 		            .toUri();
 		
-	    return ResponseEntity.created(uri).body(new MeetingResource(meetingSaved));
+	    return ResponseEntity.created(uri).body(new MeetUpResource(meetingSaved));
 	}
 }

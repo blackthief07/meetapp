@@ -9,7 +9,7 @@ public class BeerNotFoundException extends RuntimeException {
 	private final Long id;
 
 	public BeerNotFoundException(final long id) {
-		super("Beers could not be calculated for meeting: " + id);
+		super("Beers could not be calculated for meetup: " + id);
 		this.id = id;
 	}
 }

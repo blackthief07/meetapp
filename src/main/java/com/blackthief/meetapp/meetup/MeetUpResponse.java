@@ -1,4 +1,4 @@
-package com.blackthief.meetapp.meeting;
+package com.blackthief.meetapp.meetup;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @Data
 @Builder
 @AllArgsConstructor
-public class MeetingResponse implements Serializable {
+public class MeetUpResponse implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

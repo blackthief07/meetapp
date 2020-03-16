@@ -17,7 +17,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
-import com.blackthief.meetapp.meeting.Meeting;
+import com.blackthief.meetapp.meetup.MeetUp;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,12 +46,12 @@ public class Weather {
 	private Double temp;
 
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "WEATHER_MEETING",
+	@JoinTable(name = "MEETUP_WEATHER",
 		joinColumns = {
 			@JoinColumn(name = "WEATHER_ID") },
 		inverseJoinColumns = {
-			@JoinColumn(name = "MEETING_ID") })
-	private Meeting meeting;
+			@JoinColumn(name = "MEETUP_ID") })
+	private MeetUp meetUp;
 	
 	public Weather(WeatherApiResponse apiWeather) {
 		this.setDescription(apiWeather.getDaily().getData().get(0).getSummary());
