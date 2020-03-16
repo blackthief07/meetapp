@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.blackthief.meetapp.meeting.Meeting;
+import com.blackthief.meetapp.meetup.MeetUp;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kong.unirest.HttpResponse;
@@ -34,8 +34,8 @@ public class WeatherServiceImpl implements WeatherService {
 	}
 	
 	@Override
-	public Optional<Weather> getByMeeting(Meeting meeting) {
-		final LocalDateTime date = meeting.getDate();
+	public Optional<Weather> getByMeetUp(MeetUp meetUp) {
+		final LocalDateTime date = meetUp.getDate();
 		ObjectMapper objectMapper = new ObjectMapper();
 		Weather retVal;
 		
@@ -48,7 +48,7 @@ public class WeatherServiceImpl implements WeatherService {
 			
 			WeatherApiResponse apiValue = objectMapper.readValue(response.getBody(), WeatherApiResponse.class);
 			retVal = new Weather(apiValue);
-			retVal.setMeeting(meeting);
+			retVal.setMeetUp(meetUp);
 			
 			return Optional.ofNullable(this.save(retVal));
 			
@@ -61,7 +61,7 @@ public class WeatherServiceImpl implements WeatherService {
 	
 	@Override
 	public Weather save(Weather weather) {
-		Weather weatherToSave = Weather.builder().description(weather.getDescription()).date(weather.getDate()).temp(weather.getTemp()).meeting(weather.getMeeting()).build();
+		Weather weatherToSave = Weather.builder().description(weather.getDescription()).date(weather.getDate()).temp(weather.getTemp()).meetUp(weather.getMeetUp()).build();
 
 		return weatherRepository.save(weatherToSave);
 	}

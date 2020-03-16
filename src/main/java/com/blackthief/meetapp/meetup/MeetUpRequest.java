@@ -1,4 +1,4 @@
-package com.blackthief.meetapp.meeting;
+package com.blackthief.meetapp.meetup;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MeetingRequest implements Serializable {
+public class MeetUpRequest implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -32,6 +32,6 @@ public class MeetingRequest implements Serializable {
 	private LocalDateTime date;
 	
 	@NotNull
-	@Size(min = 1, message = "MaxAtendees should be atleast 1")
+	@Size(min = 1, max = 200, message = "MaxAtendees should be atleast 1 and not greater than 200")
 	private Integer maxAttendees;
 }

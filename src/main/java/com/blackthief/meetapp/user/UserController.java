@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.blackthief.meetapp.meeting.MeetingResource;
-import com.blackthief.meetapp.meeting.MeetingService;
+import com.blackthief.meetapp.meetup.MeetUpResource;
+import com.blackthief.meetapp.meetup.MeetUpService;
 import com.blackthief.meetapp.security.AuthorizationRequest;
 
 @RestController
@@ -27,11 +27,11 @@ public class UserController {
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	private UserService userService;
-	private MeetingService meetingService;
+	private MeetUpService meetUpService;
 
-	public UserController(final UserService userService, final MeetingService meetingService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+	public UserController(final UserService userService, final MeetUpService meetUpService, BCryptPasswordEncoder bCryptPasswordEncoder) {
 		this.userService = userService;
-		this.meetingService =  meetingService;
+		this.meetUpService =  meetUpService;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
 	
@@ -72,12 +72,12 @@ public class UserController {
 	}
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@GetMapping("/{id}/meetings")
-	public ResponseEntity<Resources<MeetingResource>> getMeetingForUser(@Min(1) @PathVariable final long id) {
-		final Resources<MeetingResource> resources = new Resources<>(meetingService
+	@GetMapping("/{id}/meetups")
+	public ResponseEntity<Resources<MeetUpResource>> getMeetUpsForUser(@Min(1) @PathVariable final long id) {
+		final Resources<MeetUpResource> resources = new Resources<>(meetUpService
 				.getByUser(id)
 				.stream()
-				.map(MeetingResource::new)
+				.map(MeetUpResource::new)
 				.collect(Collectors.toList()));
 	    
 	    final String uriString = ServletUriComponentsBuilder.fromCurrentRequest().build().toUriString();

@@ -14,6 +14,6 @@ public class UserAuthenticatedResource extends ResourceSupport {
   public UserAuthenticatedResource(final User user) {
     this.userResponse = UserMapper.toResponse(user);
     add(linkTo(UserController.class).withRel("users"));
-    add(linkTo(methodOn(UserAuthenticatedController.class).getMeetings()).withRel("meetings"));
+    add(linkTo(methodOn(UserAuthenticatedController.class).getMeetUps()).withRel("meetups"));
   }
 }

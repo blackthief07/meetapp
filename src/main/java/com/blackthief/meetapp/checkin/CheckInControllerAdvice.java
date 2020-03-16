@@ -1,4 +1,4 @@
-package com.blackthief.meetapp.meeting;
+package com.blackthief.meetapp.checkin;
 
 import java.util.Optional;
 
@@ -12,10 +12,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 @RequestMapping(produces = "application/vnd.error+json")
-public class MeetingControllerAdvice extends ResponseEntityExceptionHandler {
+public class CheckInControllerAdvice extends ResponseEntityExceptionHandler {
 
-  @ExceptionHandler(MeetingNotFoundException.class)
-  public ResponseEntity<VndErrors> notFoundException(final MeetingNotFoundException e) {
+  @ExceptionHandler(CheckInNotFoundException.class)
+  public ResponseEntity<VndErrors> notFoundException(final CheckInNotFoundException e) {
     return error(e, HttpStatus.NOT_FOUND, e.getId().toString());
   }
 

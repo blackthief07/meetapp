@@ -8,41 +8,41 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.blackthief.meetapp.meeting.Meeting;
-import com.blackthief.meetapp.meeting.MeetingNotFoundException;
-import com.blackthief.meetapp.meeting.MeetingService;
+import com.blackthief.meetapp.meetup.MeetUp;
+import com.blackthief.meetapp.meetup.MeetUpNotFoundException;
+import com.blackthief.meetapp.meetup.MeetUpService;
 
 @RestController
 @CrossOrigin
 public class WeatherController {
 
 	final WeatherService weatherService;
-	final MeetingService meetingService;
+	final MeetUpService meetUpService;
 
-	public WeatherController(final WeatherService weatherService, final MeetingService meetingService) {
+	public WeatherController(final WeatherService weatherService, final MeetUpService meetUpService) {
 		this.weatherService = weatherService;
-		this.meetingService = meetingService;
+		this.meetUpService = meetUpService;
 	}
 	
 	@PreAuthorize("hasRole('ROLE_USER') OR hasRole('ROLE_ADMIN')")
-	@GetMapping(value = { "/meetings/{id}/weather" }, produces = { "application/hal+json" })
+	@GetMapping(value = { "/meetups/{id}/weather" }, produces = { "application/hal+json" })
 	public ResponseEntity<WeatherResource> getById(@Min(1) @PathVariable final long id) {
 		
-		Meeting meeting = meetingService
+		MeetUp meetUp = meetUpService
 	        .getById(id)
-	        .orElseThrow(() -> new MeetingNotFoundException(id));
+	        .orElseThrow(() -> new MeetUpNotFoundException(id));
 		
 		
-		final Weather weather = (meeting.getWeather() == null) ? this.GetWeatherFromApi(meeting) : meeting.getWeather();
+		final Weather weather = (meetUp.getWeather() == null) ? this.GetWeatherFromApi(meetUp) : meetUp.getWeather();
         
 		return ResponseEntity.ok(new WeatherResource(weather));
 	}
 	
-	private Weather GetWeatherFromApi(Meeting meeting) {
-		final LocalDateTime date = meeting.getDate();
+	private Weather GetWeatherFromApi(MeetUp meetUp) {
+		final LocalDateTime date = meetUp.getDate();
 		
 		return weatherService
-		        .getByMeeting(meeting)
+		        .getByMeetUp(meetUp)
 		        .orElseThrow(() -> new WeatherNotFoundException(date));
 	}
 }

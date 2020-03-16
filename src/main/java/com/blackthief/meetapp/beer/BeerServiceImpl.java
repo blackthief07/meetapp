@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.blackthief.meetapp.meeting.Meeting;
+import com.blackthief.meetapp.meetup.MeetUp;
 
 @Service("beerService")
 public class BeerServiceImpl implements BeerService {
@@ -31,17 +31,17 @@ public class BeerServiceImpl implements BeerService {
 	}
 	
 	@Override
-	public Optional<Beer> getByMeeting(Meeting meeting) {
+	public Optional<Beer> getByMeetUp(MeetUp meetUp) {
 		Beer retVal;
 		
 		try {
-			final boolean addBeers = Double.compare(meeting.getWeather().getTemp(), maxTemp) > 0;
-			final Long cantAttendees = (long) ((meeting.getAttendees().size() > 0) ? meeting.getAttendees().size() : meeting.getMaxAttendees());
+			final boolean addBeers = Double.compare(meetUp.getWeather().getTemp(), maxTemp) > 0;
+			final Long cantAttendees = (long) ((meetUp.getMeetUpCheckIns().size() > 0) ? meetUp.getMeetUpCheckIns().size() : meetUp.getMaxAttendees());
 			final Long cantBeers = cantAttendees * (qtyPerPerson + (addBeers ? additionalPerPerson : 0));
 			final Long packsToBuy = (long) Math.ceil(cantBeers*1.0/packageQuantity);
 			
 			retVal = Beer.builder().cantBeers(cantBeers).beersPerPackage(packageQuantity).packsToBuy(packsToBuy).build();
-			retVal.setMeeting(meeting);
+			retVal.setMeetUp(meetUp);
 			
 			return Optional.ofNullable(retVal);
 			
@@ -54,7 +54,7 @@ public class BeerServiceImpl implements BeerService {
 	
 	@Override
 	public Beer save(Beer beer) {
-		Beer beerToSave = Beer.builder().cantBeers(beer.getCantBeers()).beersPerPackage(beer.getBeersPerPackage()).packsToBuy(beer.getPacksToBuy()).meeting(beer.getMeeting()).build();
+		Beer beerToSave = Beer.builder().cantBeers(beer.getCantBeers()).beersPerPackage(beer.getBeersPerPackage()).packsToBuy(beer.getPacksToBuy()).meetUp(beer.getMeetUp()).build();
 
 		return beerRepository.save(beerToSave);
 	}

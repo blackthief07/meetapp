@@ -15,7 +15,7 @@ public class UserResource extends ResourceSupport {
     this.userResponse = UserMapper.toResponse(user);
     final long id = user.getId();
     add(linkTo(UserController.class).withRel("users"));
-    add(linkTo(methodOn(UserController.class).getMeetingForUser(id)).withRel("meetings"));
+    add(linkTo(methodOn(UserController.class).getMeetUpsForUser(id)).withRel("meetups"));
     add(linkTo(methodOn(UserController.class).getById(id)).withSelfRel());
   }
 }

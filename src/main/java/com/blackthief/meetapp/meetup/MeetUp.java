@@ -1,4 +1,4 @@
-package com.blackthief.meetapp.meeting;
+package com.blackthief.meetapp.meetup;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +10,8 @@ import javax.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.blackthief.meetapp.beer.Beer;
+import com.blackthief.meetapp.checkin.CheckIn;
+import com.blackthief.meetapp.checkin.CheckInKey;
 import com.blackthief.meetapp.user.User;
 import com.blackthief.meetapp.weather.Weather;
 
@@ -22,7 +24,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Meeting {
+public class MeetUp {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "meeting_generator")
@@ -37,30 +39,27 @@ public class Meeting {
 	
 	@Column(name = "max_attendees")
 	private Integer maxAttendees;
-
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "MEETING_USERS",
-		joinColumns = {
-			@JoinColumn(name = "MEETING_ID") },
-		inverseJoinColumns = {
-			@JoinColumn(name = "USER_ID") })
-	private Set<User> attendees;
 	
-	@OneToOne(mappedBy = "meeting")
+	@OneToMany(mappedBy = "meetUp", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<CheckIn> meetUpCheckIns;
+	
+	@OneToOne(mappedBy = "meetUp")
 	private Weather weather;
 	
-	@OneToOne(mappedBy = "meeting")
+	@OneToOne(mappedBy = "meetUp")
 	private Beer beer;
 	
 	public void addAttendee(User attendee) {
-		this.attendees.add(attendee);
+		final CheckIn meetUpCheckIn = CheckIn.builder().attendee(attendee).checkedIn(false).meetUp(this).id(new CheckInKey(this.getId(), attendee.getId())).build();
+		
+		this.meetUpCheckIns.add(meetUpCheckIn);
 	}
 	
 	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Meeting)) return false;
-        Meeting meeting = (Meeting) o;
+        if (!(o instanceof MeetUp)) return false;
+        MeetUp meeting = (MeetUp) o;
         return Objects.equals(getId(), meeting.getId());
     }
  

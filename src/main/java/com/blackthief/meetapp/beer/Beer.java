@@ -14,7 +14,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
-import com.blackthief.meetapp.meeting.Meeting;
+import com.blackthief.meetapp.meetup.MeetUp;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,12 +43,12 @@ public class Beer {
 	private Long packsToBuy;
 	
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "BEER_MEETING",
+	@JoinTable(name = "MEETUP_BEER",
 		joinColumns = {
 			@JoinColumn(name = "BEER_ID") },
 		inverseJoinColumns = {
-			@JoinColumn(name = "MEETING_ID") })
-	private Meeting meeting;
+			@JoinColumn(name = "MEETUP_ID") })
+	private MeetUp meetUp;
 	
 	@Override
     public boolean equals(Object o) {
